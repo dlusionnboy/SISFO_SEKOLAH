@@ -51,6 +51,14 @@
                                     aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
+
+                                <!-- JIKA ERROR -->
+                                <div class="alert alert-danger error" role="alert" style="display: none;">
+                                </div>
+                                <!-- JIKA SUKSES -->
+                                <div class="alert alert-primary sukses" role="alert" style="display: none;">
+                                </div>
+
                                 <!-- FORM INPUT -->
                                 <div class="mb-3 row">
                                     <label for="inputNama" class="col-sm-2 col-form-label">Nama</label>
@@ -74,20 +82,84 @@
                                         </select>
                                     </div>
                                 </div>
+                                <div class="mb-3 row">
+                                    <label for="inputAlamat" class="col-sm-2 col-form-label">Alamat</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="inputAlamat">
+                                    </div>
+                                </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                                <button type="button" class="btn btn-primary">Simpan</button>
+                                <button type="button" class="btn btn-primary" id="tombolSimpan">Simpan</button>
                             </div>
                         </div>
                     </div>
                 </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Nama</th>
+                            <th>Email</th>
+                            <th>Alamat</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Nama</td>
+                            <td>Email</td>
+                            <td>Alamat</td>
+                            <td>
+                                <button type="button" class="btn btn-warning btn-sm">Edit</button>
+                                <button type="button" class="btn btn-danger btn-sm">Delete</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
     <!-- JAVASCRIPT -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"
+        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+
+    <script>
+    $('#tombolSimpan').on('click', function() {
+        var $nama = $('#inputNama').val();
+        var $email = $('#inputEmail').val();
+        var $bidang = $('#inputBidang').val();
+        var $alamat = $('#inputAlamat').val();
+
+
+        $.ajax({
+            url: "<?php echo site_url("/murid/simpan") ?>",
+            type: "POST",
+            data: {
+                nama: $nama,
+                email: $email,
+                bidang: $bidang,
+                alamat: $alamat
+            },
+            success: function(hasil) {
+                var $obj = $.parseJSON(hasil);
+                if ($obj.sukses == false) {
+                    // $('.sukses').hide();
+                    $('.error').show();
+                    $('.error').html($obj.error);
+                } else {
+                    // $('.error').hide();
+                    $('.sukses').show();
+                    $('.sukses').html($obj.sukses);
+                }
+            }
+        });
+    });
     </script>
 </body>
 
